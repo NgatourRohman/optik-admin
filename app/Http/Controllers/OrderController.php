@@ -37,7 +37,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load('items.product'); // eager load relasi produk
+        return view('orders.show', compact('order'));
     }
 
     /**
