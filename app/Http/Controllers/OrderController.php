@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use Illuminate\Http\Request;
+
+use App\Models\Order;
+use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
@@ -21,7 +23,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        return view('orders.create', compact('products'));
     }
 
     /**
@@ -29,7 +32,38 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'customer_name' => 'required',
+            'customer_address' => 'required',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        $total = 0;
+        foreach ($data['items'] as &$item) {
+            $product = Product::find($item['product_id']);
+            $item['price'] = $product->price;
+            $total += $product->price * $item['quantity'];
+        }
+
+        $order = Order::create([
+            'customer_name' => $data['customer_name'],
+            'customer_address' => $data['customer_address'],
+            'total_price' => $total,
+            'status' => 'baru'
+        ]);
+
+        foreach ($data['items'] as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price']
+            ]);
+        }
+
+        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil ditambahkan');
     }
 
     /**
