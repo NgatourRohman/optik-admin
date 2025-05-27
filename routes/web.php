@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
-
 use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
@@ -10,13 +10,27 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-<<<<<<< HEAD
+
     Route::resource('categories', CategoryController::class);
-=======
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
     Route::resource('products', ProductController::class);
->>>>>>> feature/product-views
+    Route::resource('orders', OrderController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::resource('orders', OrderController::class)->middleware(['auth']);
+
+require __DIR__.'/auth.php';
