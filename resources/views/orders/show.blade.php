@@ -33,6 +33,19 @@
             </tbody>
         </table>
 
+        <h2 class="text-xl font-semibold mt-6 mb-2">Ubah Status</h2>
+        <form action="{{ route('orders.update', $order) }}" method="POST" class="flex items-center space-x-4">
+            @csrf
+            @method('PUT')
+            <select name="status" class="border p-2 rounded">
+                <option value="baru" {{ $order->status == 'baru' ? 'selected' : '' }}>Baru</option>
+                <option value="diproses" {{ $order->status == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                <option value="selesai" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+            </select>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Update</button>
+        </form>
+
+
         <div class="mt-4">
             <a href="{{ route('orders.index') }}" class="text-blue-600 hover:underline">← Kembali ke daftar pesanan</a>
         </div>

@@ -54,7 +54,14 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $request->validate([
+            'status' => 'required|in:baru,diproses,selesai',
+        ]);
+
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->route('orders.show', $order)->with('success', 'Status berhasil diupdate');
     }
 
     /**
