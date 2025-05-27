@@ -15,6 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+        <a href="{{ route('dashboard') }}" class="text-blue-600 hover:underline">Dashboard</a>
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
@@ -33,4 +34,9 @@
             </main>
         </div>
     </body>
+    @if (session('success'))
+  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+      {{ session('success') }}
+  </div>
+@endif
 </html>

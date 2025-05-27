@@ -6,6 +6,20 @@
 
         <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
+
+            <div>
+                <label class="block font-semibold">Kategori</label>
+                <select name="category_id" class="w-full border p-2 rounded">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div>
                 <label class="block font-semibold">Nama Produk</label>
                 <input type="text" name="name" class="w-full border p-2 rounded" required>
