@@ -3,38 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar produk
      */
     public function index()
     {
-        $products = Product::with('category')->get(); // gunakan with() jika pakai relasi
+        $products = Product::with('category')->get();
         return view('products.index', compact('products'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Tampilkan form tambah produk
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('products.create', compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan produk baru ke database
      */
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
+            'name'        => 'required',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
             'description' => 'nullable',
-            'image' => 'nullable|image|max:2048',
+            'category_id' => 'nullable|exists:categories,id',
+            'image'       => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -46,32 +49,26 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Tampilkan form edit produk
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Simpan perubahan pada produk
      */
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
+            'name'        => 'required',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
             'description' => 'nullable',
-            'image' => 'nullable|image|max:2048',
+            'category_id' => 'nullable|exists:categories,id',
+            'image'       => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -83,10 +80,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus produk
      */
     public function destroy(Product $product)
     {
-        //
+        if ($product->image) {
+            \Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus');
     }
 }
