@@ -1,8 +1,9 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h1 class="text-xl font-bold">Daftar Produk</h1>
+    </x-slot>
 
-@section('content')
     <div class="p-4">
-        <h1 class="text-xl font-bold mb-4">Daftar Produk</h1>
         <a href="{{ route('products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">+ Tambah Produk</a>
 
         <table class="w-full mt-4 border">
@@ -28,4 +29,4 @@
             </tbody>
         </table>
     </div>
-@endsection
+</x-app-layout>

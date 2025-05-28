@@ -1,9 +1,9 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h1 class="text-2xl font-bold">Manajemen Kategori</h1>
+    </x-slot>
 
-@section('content')
     <div class="p-4 max-w-xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">Manajemen Kategori</h1>
-
         <form action="{{ route('categories.store') }}" method="POST" class="flex gap-2 mb-6">
             @csrf
             <input name="name" class="border p-2 w-full rounded" placeholder="Nama kategori" required>
@@ -34,4 +34,4 @@
             </tbody>
         </table>
     </div>
-@endsection
+</x-app-layout>

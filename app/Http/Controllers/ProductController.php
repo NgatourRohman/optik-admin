@@ -12,7 +12,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category')->get(); // gunakan with() jika pakai relasi
+        return view('products.index', compact('products'));
     }
 
     /**
